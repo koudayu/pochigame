@@ -5,49 +5,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ポチ巣サイズ確認</title>
+<title>ポチの巣 サイズ確認</title>
 
 <style>
 
 body{
     margin:0;
-    background:#222;
-    color:white;
-    font-family:sans-serif;
-
+    background:#333;
     display:flex;
-    flex-direction:column;
+    justify-content:center;
     align-items:center;
-
-    min-height:100vh;
-}
-
-.controls{
-    margin:20px;
-}
-
-button{
-    margin:2px;
-    padding:8px 12px;
+    height:100vh;
 }
 
 #map{
-    width:min(90vw,90vh);
+
+    width:min(95vw,95vh);
     aspect-ratio:1;
 
     display:grid;
 
-    border:2px solid white;
+    grid-template-columns:repeat(15,1fr);
+    grid-template-rows:repeat(15,1fr);
+
+    border:4px solid #222;
 }
 
 .cell{
-    border:1px solid #444;
-    background:#7a5230;
+    border:1px solid rgba(0,0,0,0.15);
     box-sizing:border-box;
 }
 
+/* 土 */
+.floor{
+    background:#caa472;
+}
+
+/* キャラ */
 .pochi{
-    background:gold;
+    background:#ff9933;
+}
+
+.friend{
+    background:#66ccff;
+}
+
+/* 家具 */
+
+.bed{
+    background:#87cefa;
+}
+
+.table{
+    background:#a0522d;
+}
+
+.chair{
+    background:#d2691e;
+}
+
+.storage{
+    background:#777;
+}
+
+.flower{
+    background:#ff69b4;
 }
 
 </style>
@@ -55,54 +77,107 @@ button{
 
 <body>
 
-<div class="controls">
-
-<button onclick="createMap(3)">3×3</button>
-<button onclick="createMap(5)">5×5</button>
-<button onclick="createMap(7)">7×7</button>
-<button onclick="createMap(9)">9×9</button>
-<button onclick="createMap(11)">11×11</button>
-<button onclick="createMap(13)">13×13</button>
-<button onclick="createMap(15)">15×15</button>
-
-</div>
-
 <div id="map"></div>
 
 <script>
 
-function createMap(size){
+const size = 15;
 
-    const map=document.getElementById("map");
+const map = document.getElementById("map");
 
-    map.innerHTML="";
+for(let y=0;y<size;y++){
 
-    map.style.gridTemplateColumns=`repeat(${size},1fr)`;
-    map.style.gridTemplateRows=`repeat(${size},1fr)`;
+    for(let x=0;x<size;x++){
 
-    const center=Math.floor(size/2);
+        const cell = document.createElement("div");
 
-    for(let y=0;y<size;y++){
+        cell.className = "cell floor";
 
-        for(let x=0;x<size;x++){
+        const key = `${x},${y}`;
 
-            const cell=document.createElement("div");
+        // ===== 寝床 =====
 
-            cell.className="cell";
+        const beds = [
+            "1,1","2,1","1,2","2,2",
+            "4,1","5,1","4,2","5,2",
+            "7,1","8,1","7,2","8,2",
+            "10,1","11,1","10,2","11,2",
+            "1,4","2,4","1,5","2,5",
+            "4,4","5,4","4,5","5,5"
+        ];
 
-            if(x===center && y===center){
-                cell.classList.add("pochi");
-            }
-
-            map.appendChild(cell);
-
+        if(beds.includes(key)){
+            cell.className = "cell bed";
         }
+
+        // ===== 食堂 =====
+
+        const tables = [
+            "9,8","10,8","9,9","10,9"
+        ];
+
+        if(tables.includes(key)){
+            cell.className = "cell table";
+        }
+
+        const chairs = [
+            "8,8","11,8",
+            "8,9","11,9",
+            "9,7","10,7",
+            "9,10","10,10"
+        ];
+
+        if(chairs.includes(key)){
+            cell.className = "cell chair";
+        }
+
+        // ===== 倉庫 =====
+
+        const storage = [
+            "12,12","13,12",
+            "12,13","13,13"
+        ];
+
+        if(storage.includes(key)){
+            cell.className = "cell storage";
+        }
+
+        // ===== 花壇 =====
+
+        const flowers = [
+            "0,12","1,12",
+            "0,13","1,13"
+        ];
+
+        if(flowers.includes(key)){
+            cell.className = "cell flower";
+        }
+
+        // ===== 仲間 =====
+
+        const friends = [
+            "6,6",
+            "7,6",
+            "8,6",
+            "6,7",
+            "7,7"
+        ];
+
+        if(friends.includes(key)){
+            cell.className = "cell friend";
+        }
+
+        // ===== ポチ =====
+
+        if(key === "8,7"){
+            cell.className = "cell pochi";
+        }
+
+        map.appendChild(cell);
 
     }
 
 }
-
-createMap(15);
 
 </script>
 
